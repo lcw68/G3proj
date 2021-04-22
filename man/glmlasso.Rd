@@ -18,7 +18,7 @@ glmlasso(X, y, lambda = 0.1, tol = 1e-06, iter = 100)
 \item{iter}{iteration times}
 }
 \value{
-response value
+Lasso estimate of coefficients
 }
 \description{
 Lasso regression for logistics model

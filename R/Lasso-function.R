@@ -96,7 +96,7 @@ one_dim_logis <- function(lambda,XX,y,W)
 #' @param tol convergence threshold
 #' @param iter iteration times
 #'
-#' @return response value
+#' @return Lasso estimate of coefficients
 #'
 #' @examples
 #' set.seed(1232)
@@ -124,7 +124,9 @@ glmlasso <- function(
   iter    = 100      # number of max iterations
 )
 {
-  w = coef(glm(y~0+X,family="binomial"))
+  #w = coef(glm.fit(X,y,family=binomial()))
+  #w[is.na(w)]=1
+  w = rep(1,ncol(X))
   i = 1
   tol_curr = 1
   w = t(w)
