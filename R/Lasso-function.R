@@ -148,3 +148,62 @@ glmlasso <- function(
 }
 
 
+#'select optimal tuning parameter lambda for lasso based on BIC criterion.
+#'
+#'This function will fit the glmlasso with a sequence value of tuning parameter lambdas and
+#'return a plot of BIC vs lambda and the optimal lambda with the smallest BIC.
+#'
+#'This function will need glmlasso function.
+#'
+#'@param Xz the design matrix for glmlasso
+#'@param yz a vector of binary outcomes
+#'@param lambda.min the smallest lambda
+#'@param lambda.max the largest lambda
+#'@param len the number of lambdas for fitting
+#'
+#'@return a plot of BIC vs lambda and the optimal lambda with the smallest BIC
+#'
+#'@examples
+#'
+#'set.seed(8675309)
+#'Xz = scale(matrix(rnorm(5000), ncol=10))
+#'bz = c(.5, -.5, .25, -.25, .125, -.125, rep(0, 4))
+#'yz = rbinom(Nz,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
+#'optim.lambda(Xz,yz,lambda.min = 0,lambda.max = 0.1,len = 200)
+#'
+#'
+#'@export
+optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len){
+  #create empty matrices
+  lambda <- matrix(NA,1,len)
+  ww <- matrix(NA,ncol(Xz),len)
+  xb <- matrix(NA,length(yz),len)
+  pp <- matrix(NA,length(yz),len)
+  Devv <- matrix(NA,1,len)
+  k <- matrix(NA,1,len)
+  BIC <- matrix(NA,1,len)
+  #a loop for fitting glmlasso for different values of tuning param
+  for (i in 1:len) {
+    lambda[i] = lambda.min+i*(lambda.max-lambda.min)/len
+    ww[,i] <- glmlasso(Xz,yz,lambda =lambda[i])
+    xb[,i] = Xz%*%ww[,i]
+    pp[,i] = exp(xb[,i])/(1+exp(xb[,i]))
+    Devv[i] <- -2*(t(yz)%*%(xb[,i])+sum(log(1-pp[,i]))) #deviance for logistic regression
+    k[i] = sum(ww[,i]!=0) #df
+    BIC[i] = Devv[i] + k[i]*log(length(yz))
+  }
+  # Choose the minimum value
+  min_BIC = which(BIC == min(BIC))
+  # opt.lambda
+  l1 <- lambda[min_BIC]
+  # plot of BIC v.s. lambda
+  l2 <- plot(lambda, BIC,
+             xlim = c(lambda.min, lambda.max),
+             xlab = expression(lambda),
+             type = 'l', lwd = 2, lty = 1, col = 1)
+  abline(v=lambda[min_BIC], col = 2)
+  return(list(l1,l2))
+}
+
+
+
