@@ -134,10 +134,10 @@ glmlasso <- function(
   while(tol < tol_curr && i < iter)
   {
     w_old = w
+    W0 = exp(X%*%w)/(1+exp(X%*%w))^2   ###W = \pi(xi)*(1-\pi(xi))
+    z = getzed(w,X,y,W0)
     for(j in 1:length(w))
     {
-      W0 = exp(X%*%w)/(1+exp(X%*%w))^2   ###W = \pi(xi)*(1-\pi(xi))
-      z = getzed(w,X,y,W0)
       res <- get_res_logi(w,j,X,z)
       w[j,] <- one_dim_logis(lambda,X[,j],y=res,W0)
     }
