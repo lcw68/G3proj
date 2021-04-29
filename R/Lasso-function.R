@@ -110,7 +110,7 @@ one_dim_logis <- function(lambda,XX,y,W)
 #' fit <- glmnet(Xz,yz,family="binomial",lambda = 0.1,intercept = FALSE)
 #' coef(fit,s = 0.1)
 
-#' fit1 <- glmlasso(Xz,yz,tol=1e-12)
+#' fit1 <- glmlasso(Xz,yz,lambda,tol=1e-12)
 #'
 #'
 #'
@@ -145,6 +145,43 @@ glmlasso <- function(
     tol_curr <- crossprod(w - w_old)
   }
   return(w)
+}
+
+
+#' Prediction of Lasso logistics regression
+#'
+#'
+#' @param fit fitted object from glmlasso
+#' @param newdata a data frame in which to look for variables with which to predict.
+#' @param type the type of prediction required. The default is on the scale of the response variable.
+#' \code{type="class"} gives the predicted classification result
+#' @param threshold Threshold values decided for classification
+#'
+#' @return if \code{type="class"} a vector of predicted class will be returned. Otherwise return a vector of raw probability.
+#'
+#' @examples
+#' set.seed(1232)
+#' Nz = 500
+#' pz = 10
+#' Xz = scale(matrix(rnorm(Nz*pz), ncol=pz))
+#' bz = c(.5, -.5, .25, -.25, .125, -.125, rep(0, pz-6))
+#' yz = rbinom(Nz,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
+#' lambda = .1
+
+#' fit1 <- glmlasso(Xz,yz,lambda,tol=1e-12)
+#' pred <- predict.glmlasso(fit1,newdata = Xz)
+#'
+#'
+#' @export
+#'
+predict.glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
+{
+  pred = exp(newdata %*% fit)/(1+exp(newdata %*% fit))
+  if(type == "class")
+  {
+    pred  = ifelse(pred > threshold,1,0)
+  }
+  return(pred)
 }
 
 

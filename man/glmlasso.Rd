@@ -34,7 +34,7 @@ lambda = .1
 require(glmnet)
 fit <- glmnet(Xz,yz,family="binomial",lambda = 0.1,intercept = FALSE)
 coef(fit,s = 0.1)
-fit1 <- glmlasso(Xz,yz,tol=1e-12)
+fit1 <- glmlasso(Xz,yz,lambda,tol=1e-12)
 
 
 
