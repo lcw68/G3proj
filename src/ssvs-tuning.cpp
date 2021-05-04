@@ -122,7 +122,7 @@ double SSVS_Tune::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, a
 //' Y  = rbinom(N,1,pi)
 //'
 //' ## fit model;
-//' test1 <- SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
+//' test1 <- G3proj::SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
 //'                     tau0 = 0.4, nMC = 1000, b = 50)
 //' @export
 // [[Rcpp::export]]

@@ -127,7 +127,7 @@ double SSVS::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, arma::
 //' Y  = rbinom(N,1,pi)
 //'
 //' ## fit model;
-//' test1 <- SSVS_Logistic(Y0 = Y, X0 = X, propSD0 = 1, c0 = 10,
+//' test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0 = 1, c0 = 10,
 //'                     tau0 = 0.4, nMC = 1000, nBI = 100)
 //' @export
 // [[Rcpp::export]]
