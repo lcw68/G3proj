@@ -1,16 +1,38 @@
 Package: G3proj
-Title: What the Package Does (One Line, Title Case)
+Title: BIOS 735 Project
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Amber",
+           family = "Young",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "ayoung31@ad.unc.edu")
+    person(given = "Chuwen",
+           family = "Liu",
+           role = c("aut", "cre"),
+           email = "chuwen@email.unc.edu")
+    person(given = "Helal",
+           family = "El-Zaatari",
+           role = c("aut", "cre"),
+           email = "helal@live.unc.edu")
+    person(given = "Chanwha",
+           family = "Lee",
+           role = c("aut", "cre"),
+           email = "chanwha@email.unc.edu")
+    person(given = "Huijun",
+           family = "Jiang",
+           role = c("aut", "cre"),
+           email = "huijun@ad.unc.edu")
+Description: Package provides all necessary functions for BIOS735 final project.
+              All functions assume a logistic regression model.
+              Included are functions for LASSO and LASSO tuning parameter selection, Bayesian
+              variable selection via SSVS, and Bayesian Prediction. Also available
+              are functions to tune the Metropolis Hastings proposal standard deviation 
+              for both the SSVS and Bayesian Prediction.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+LinkingTo: Rcpp, RcppArmadillo
+imports: Rcpp
