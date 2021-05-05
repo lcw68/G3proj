@@ -1,37 +1,34 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
-class SSVS_Tune {
-
+class BLRM_Tune
+{
+  // short for Bayesian Logistic Regression Model Tuning
 private:
-  // private member function
-  double logLikeBeta(arma::vec&);
-  double logPrior(arma::vec&, arma::vec&);
+  // private member functions
+  double    loglike  (arma::vec&);
+  double    logPrior (arma::vec&, double);
 
 public:
   // public data objects
-  // data
+  //data
   int p;
   int N;
 
   arma::vec Y;
   arma::mat X;
 
-  // prior hyperparameters
-  // beta - normal mixture prior
-  double c;
-  double tau;
+  // proposal distribution information
+  arma::vec propSD;
 
-  // public member functions
-  void setValues (arma::vec&, arma::mat&, double&, double&);
-  double proposeBeta(double);
-  double rejectionRatioBeta(arma::vec&, arma::vec&, arma::vec&);
-  double sampGamma(arma::vec&, int&);
+  // public member functions;
+  void      setValues    (arma::vec&, arma::mat&);
+  double    proposeBeta  (double);
+  double    RejectRatio  (arma::vec&, arma::vec&, double);
 };
 
 
-void SSVS_Tune::setValues(arma::vec & Y0, arma::mat & X0,
-                     double & c0, double & tau0)
+void      BLRM_Tune::setValues   (arma::vec & Y0, arma::mat & X0)
 {
   // Set class values to data provided by user
   Y      = Y0;
@@ -40,26 +37,13 @@ void SSVS_Tune::setValues(arma::vec & Y0, arma::mat & X0,
   p      = X0.n_cols;
   N      = X0.n_rows;
 
-  c = c0;
-  tau = tau0;
-
 }
 
-double SSVS_Tune::sampGamma(arma::vec& beta, int& j)
+
+double    BLRM_Tune::loglike     (arma::vec & betaValue)
 {
-  // sample gamma from its full conditional
-
-  double a = exp(-0.5*beta(j)*beta(j) / (c*c*tau*tau)) / c;
-  double b = exp(-0.5*beta(j)*beta(j) / (tau*tau));
-
-  double pp = a/(a+b);
-  int gamma_j = R::rbinom(1,pp);
-  return(gamma_j);
-}
-
-double SSVS_Tune::logLikeBeta(arma::vec& beta){
-  // Evaluate log likelihood for beta
-  arma::vec eta = X*beta;
+  // Evaluate log likelihood
+  arma::vec eta = X*betaValue;
   arma::vec mu  = exp(eta) / (1 + exp(eta));
 
   double logLike = 0;
@@ -71,53 +55,58 @@ double SSVS_Tune::logLikeBeta(arma::vec& beta){
   return logLike;
 }
 
-double SSVS_Tune::proposeBeta(double propSigma)
+double    BLRM_Tune::proposeBeta   (double propSigma)
 {
-  // Generate value from proposal distribution
-  return(R::rnorm(0,propSigma));
+  // Generate random walk from proposal distribution for MwG sampling
+  return R::rnorm(0,propSigma);
 }
 
-double SSVS_Tune::logPrior(arma::vec& beta, arma::vec& gamma)
+double    BLRM_Tune::logPrior      (arma::vec & betaValue, double PriorVar)
 {
   // Evaluate log prior for beta
-  arma::vec kernelvec;
-  kernelvec = beta / (c*tau*gamma + tau*(1-gamma));
-  return(-0.5*sum(kernelvec % kernelvec));
+  if (PriorVar == 0)
+    // non-informative improper uniform prior
+  {
+    return 0;
+  }
+  else
+    // N(0, PriorVar * I) prior on beta
+  {
+    arma::vec kernel = -0.5*(1/PriorVar)*betaValue.t()*betaValue;
+    return kernel[0];
+  }
 }
 
-double SSVS_Tune::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, arma::vec& gamma)
+double    BLRM_Tune::RejectRatio   (arma::vec & betaProp, arma::vec & betaCurr, double PriorVar)
 {
-  // Compute MH rejection ratio for beta
-  return   logLikeBeta(betaProp) + logPrior(betaProp, gamma)
-  - logLikeBeta(betaCurr) - logPrior(betaCurr, gamma);
+  return   loglike(betaProp) + logPrior(betaProp, PriorVar)
+  - loglike(betaCurr)  - logPrior(betaCurr, PriorVar);
 }
 
 
 // [[Rcpp::export]]
-Rcpp::List SSVS_Tuning(arma::vec & Y0, arma::mat & X0,
-                         double & c0, double & tau0,
-                         int nMC = 1000, int b=50, int seed=1)
+Rcpp::List BLRM_Tuning(arma::vec & Y0, arma::mat & X0,
+                        double PriorVar,
+                        int nMC = 10000, int b = 50, int seed=1)
 {
-  //set seed
+  // Set seed
   srand(seed);
-  // Declare ssvs class
-  SSVS_Tune ssvs;
+
+  // Declare BLRM_Tune class
+  BLRM_Tune brlm;
 
   // Set class parameters to user specified values
-  ssvs.setValues(Y0, X0, c0, tau0);
+  brlm.setValues(Y0, X0);
 
   // Number of covariates
   int p0 = X0.n_cols;
 
-  // Declare and initialize gamma vector
-  arma::vec gamma(p0);
-  gamma = Rcpp::rbinom(p0,1,.5);
-
   // Declare vectors to hold current and proposed beta values
-  arma::vec betaCurr = arma::randn(p0); // initialize beta from standard normal
+  // initialize beta from standard normal distribution
+  arma::vec betaCurr = arma::randn(p0);
   arma::vec betaProp(p0);
 
-  // Declare and initialize vector to hold acceptance rate for each beta in a given batch
+  // Declare and initialize vector to hold acceptance rate for each beta
   arma::vec acceptb(p0);
   acceptb.zeros();
 
@@ -130,11 +119,10 @@ Rcpp::List SSVS_Tuning(arma::vec & Y0, arma::mat & X0,
   arma::mat SDbatch(maxbatch, p0);
 
   // container for log MH ratio and uniform random variable
-  double logr, logu;
+  double logr,logu;
 
-  // container for MC sampled beta and gamma
+  // container for MwG sampled beta
   arma::mat betaSamples(nMC, p0);
-  arma::mat gammaSamples(nMC, p0);
 
   // initialize proposal variance
   arma::vec propsd(p0);
@@ -143,9 +131,12 @@ Rcpp::List SSVS_Tuning(arma::vec & Y0, arma::mat & X0,
   // container for increment for proposal variance
   double deltab;
 
-  for(int i = 0; i < nMC; i++){
 
-    for(int j = 0; j < p0; j++){
+  // main code for sampling
+  for (int i = 0; i < nMC; i++)
+  {
+    for (int j = 0; j < p0; j++)
+    {
 
       // sample beta by Metropolis within Gibbs
 
@@ -153,25 +144,20 @@ Rcpp::List SSVS_Tuning(arma::vec & Y0, arma::mat & X0,
       betaProp = betaCurr;
 
       // only update the jth component
-      betaProp(j) = betaProp(j) + ssvs.proposeBeta(propsd(j)); // N(0,propSigma20) random walk
+      betaProp(j) = betaProp(j) + brlm.proposeBeta(propsd(j)); // N(0, propSD0(j)) random walk
 
       // calculate log MH ratio
-      logr  = ssvs.rejectionRatioBeta(betaProp, betaCurr, gamma);
+      logr  = brlm.RejectRatio(betaProp, betaCurr, PriorVar);
       logu  = log(R::runif(0,1));
 
       if (logu <= logr)
       {
-        // if accept new proposal, then set current betaVal as the new proposal
-        // (otherwise current betaVal remains)
+        // if accept new proposal, then set current betaCurr as the new proposal
+        // (otherwise current betaCurr remains)
         betaCurr = betaProp;
         // increase acceptance number
-        acceptb(j) = acceptb(j) + 1;
+        acceptb(j)++;
       }
-
-
-      // sample gamma from its full conditional directly (bernoulli distn)
-      gamma(j) = ssvs.sampGamma(betaCurr,j);
-
     }
 
     // at the end of batch
@@ -219,19 +205,17 @@ Rcpp::List SSVS_Tuning(arma::vec & Y0, arma::mat & X0,
       batch++;
     }
 
-    // save sampled beta and gamma
+
+    // save sampled beta after all coordinate updates finished
     betaSamples.row(i) = betaCurr.t();
-    gammaSamples.row(i) = gamma.t();
 
   }
 
-
   // output list
   Rcpp::List lst = Rcpp::List::create(
-    Rcpp::Named("beta.samples")  = betaSamples,
-    Rcpp::Named("gamma.samples")  = gammaSamples,
+    Rcpp::Named("beta.samples")   = betaSamples,
     Rcpp::Named("act.rate.batch") = ARbatch,
-    Rcpp::Named("prop.sd.batch") = SDbatch
+    Rcpp::Named("prop.sd.batch")  = SDbatch
   );
 
   return lst;
