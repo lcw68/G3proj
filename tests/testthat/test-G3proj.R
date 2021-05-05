@@ -120,7 +120,22 @@ test_that("GLM lasso bad input",{
 
 })
 
+test_that("GLM lasso result consistent with glmnet",{
+  set.seed(1232)
+  Nz = 500
+  pz = 10
+  Xz = scale(matrix(rnorm(Nz*pz), ncol=pz))
+  bz = c(.5, -.5, .25, -.25, .125, -.125, rep(0, pz-6))
+  yz = rbinom(Nz,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
+  lambda = .1
+  lambda = .1
+  fit <- glmnet::glmnet(Xz,yz,family="binomial",lambda = 0.1,intercept = FALSE)
+  fit0 = coef(fit,s = lambda)[-1,1]
+  names(fit0) = NULL
+  fit1 <- glmlasso(Xz,yz,lambda,tol=1e-12)
+  expect_equal(fit1[,1],fit0,tolerance = 0.005)
 
+})
 
 test_that("optim.lambda bad input",{
   set.seed(1232)
