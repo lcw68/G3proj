@@ -186,6 +186,6 @@ test_that("the seleted lambda close to glmnetBIC", {
   BIC<-log(n)*k - tLL
   min_BIC=which(BIC==min(BIC))
   lambda_expected <- seq(0.1,0,length=200)[min_BIC]
-  expect_equal(lambda1,lambda_expected, tolerance = 0.002)
+  expect_equal(lambda1,lambda_expected, tolerance = 0.05)
 })
 
