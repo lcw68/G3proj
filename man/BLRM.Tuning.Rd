@@ -4,7 +4,7 @@
 \alias{BLRM.Tuning}
 \title{Bayesian Logistic Regression Model (BLRM) Tuning for Proposal Standard Deviation}
 \usage{
-BLRM.Tuning(Y0, X0, PriorVar, nMC = 10000L, b = 50L, seed = 1L)
+BLRM.Tuning(Y0, X0, PriorVar, nMC = 10000, b = 50, seed = 1)
 }
 \arguments{
 \item{Y0}{vector of responses}

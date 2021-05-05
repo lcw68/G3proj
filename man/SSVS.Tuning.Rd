@@ -4,7 +4,7 @@
 \alias{SSVS.Tuning}
 \title{MH Random Walk Proposal Tuning for SSVS under Logistic Regression Model}
 \usage{
-SSVS.Tuning(Y0, X0, c0, tau0, nMC = 1000L, b = 50L, seed = 1L)
+SSVS.Tuning(Y0, X0, c0, tau0, nMC = 1000, b = 50, seed = 1)
 }
 \arguments{
 \item{Y0}{vector of responses}

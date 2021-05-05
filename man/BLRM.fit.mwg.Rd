@@ -9,10 +9,10 @@ BLRM.fit.mwg(
   X0,
   PriorVar,
   propSD0,
-  nMC = 1000L,
-  nBI = 250L,
-  thin = 5L,
-  seed = 1L
+  nMC = 1000,
+  nBI = 250,
+  thin = 5,
+  seed = 1
 )
 }
 \arguments{

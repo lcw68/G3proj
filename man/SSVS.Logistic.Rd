@@ -10,10 +10,10 @@ SSVS.Logistic(
   propSD0,
   c0,
   tau0,
-  nMC = 1000L,
-  nBI = 250L,
-  thin = 5L,
-  seed = 1L
+  nMC = 1000,
+  nBI = 250,
+  thin = 5,
+  seed = 1
 )
 }
 \arguments{
@@ -57,5 +57,5 @@ Y  = rbinom(N,1,pi)
 
 ## fit model;
 test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
-                               tau0 = 0.4, nMC = 1000, nBI = 100, seed=1)
+                               tau0 = 0.4, nMC = 1000, nBI = 100, thin=1, seed=1)
 }
