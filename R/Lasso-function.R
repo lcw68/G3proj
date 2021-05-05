@@ -136,11 +136,19 @@ glmlasso <- function(
     w_old = w
     W0 = exp(X%*%w)/(1+exp(X%*%w))^2   ###W = \pi(xi)*(1-\pi(xi))
     z = getzed(w,X,y,W0)
-    for(j in 1:length(w))
+    w_update <- function(j)
     {
       res <- get_res_logi(w,j,X,z)
-      w[j,] <- one_dim_logis(lambda,X[,j],y=res,W0)
+      wn =one_dim_logis(lambda,X[,j],y=res,W0)
+      return(wn)
     }
+
+    w = t(t(sapply(1:length(w),w_update)))
+    # for(j in 1:length(w))
+    # {
+    #   res <- get_res_logi(w,j,X,z)
+    #   w[j,] <- one_dim_logis(lambda,X[,j],y=res,W0)
+    # }
     i = i+1
     tol_curr <- crossprod(w - w_old)
   }
@@ -211,24 +219,18 @@ predict.glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
 #'
 #'@export
 optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len){
-  #create empty matrices
-  lambda <- matrix(NA,1,len)
-  ww <- matrix(NA,ncol(Xz),len)
-  xb <- matrix(NA,length(yz),len)
-  pp <- matrix(NA,length(yz),len)
-  Devv <- matrix(NA,1,len)
-  k <- matrix(NA,1,len)
-  BIC <- matrix(NA,1,len)
-  #a loop for fitting glmlasso for different values of tuning param
-  for (i in 1:len) {
-    lambda[i] = lambda.min+i*(lambda.max-lambda.min)/len
-    ww[,i] <- glmlasso(Xz,yz,lambda =lambda[i])
-    xb[,i] = Xz%*%ww[,i]
-    pp[,i] = exp(xb[,i])/(1+exp(xb[,i]))
-    Devv[i] <- -2*(t(yz)%*%(xb[,i])+sum(log(1-pp[,i]))) #deviance for logistic regression
-    k[i] = sum(ww[,i]!=0) #df
-    BIC[i] = Devv[i] + k[i]*log(length(yz))
+  lambda = seq(lambda.min,lambda.max,length = len+1)[-1]
+  BIC.cal <- function(i){
+    ww <- glmlasso(Xz,yz,lambda =lambda[i])
+    xb = Xz%*%ww
+    pp = exp(xb)/(1+exp(xb))
+    Devv <- -2*(t(yz)%*%(xb)+sum(log(1-pp))) #deviance for logistic regression
+    k = sum(ww!=0) #df
+    BIC = Devv+ k*log(length(yz))
+    return(BIC)
   }
+  BIC = sapply(1:len, BIC.cal)
+
   # Choose the minimum value
   min_BIC = which(BIC == min(BIC))
   # opt.lambda
@@ -241,6 +243,7 @@ optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len){
   abline(v=lambda[min_BIC], col = 2)
   return(list(l1,l2))
 }
+
 
 
 
