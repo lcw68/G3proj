@@ -6,6 +6,40 @@
 
 using namespace Rcpp;
 
+// BLRM_Tuning
+Rcpp::List BLRM_Tuning(arma::vec& Y0, arma::mat& X0, double PriorVar, int nMC, int b, int seed);
+RcppExport SEXP _G3proj_BLRM_Tuning(SEXP Y0SEXP, SEXP X0SEXP, SEXP PriorVarSEXP, SEXP nMCSEXP, SEXP bSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type Y0(Y0SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type X0(X0SEXP);
+    Rcpp::traits::input_parameter< double >::type PriorVar(PriorVarSEXP);
+    Rcpp::traits::input_parameter< int >::type nMC(nMCSEXP);
+    Rcpp::traits::input_parameter< int >::type b(bSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(BLRM_Tuning(Y0, X0, PriorVar, nMC, b, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
+// BLRM_fit_mwg
+Rcpp::List BLRM_fit_mwg(arma::vec& Y0, arma::mat& X0, double PriorVar, arma::vec& propSD0, int nMC, int nBI, int thin, int seed);
+RcppExport SEXP _G3proj_BLRM_fit_mwg(SEXP Y0SEXP, SEXP X0SEXP, SEXP PriorVarSEXP, SEXP propSD0SEXP, SEXP nMCSEXP, SEXP nBISEXP, SEXP thinSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type Y0(Y0SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type X0(X0SEXP);
+    Rcpp::traits::input_parameter< double >::type PriorVar(PriorVarSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type propSD0(propSD0SEXP);
+    Rcpp::traits::input_parameter< int >::type nMC(nMCSEXP);
+    Rcpp::traits::input_parameter< int >::type nBI(nBISEXP);
+    Rcpp::traits::input_parameter< int >::type thin(thinSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(BLRM_fit_mwg(Y0, X0, PriorVar, propSD0, nMC, nBI, thin, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SSVS_Logistic
 Rcpp::List SSVS_Logistic(arma::vec& Y0, arma::mat& X0, arma::vec& propSD0, double& c0, double& tau0, int nMC, int nBI, int thin, int seed);
 RcppExport SEXP _G3proj_SSVS_Logistic(SEXP Y0SEXP, SEXP X0SEXP, SEXP propSD0SEXP, SEXP c0SEXP, SEXP tau0SEXP, SEXP nMCSEXP, SEXP nBISEXP, SEXP thinSEXP, SEXP seedSEXP) {
@@ -44,6 +78,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_G3proj_BLRM_Tuning", (DL_FUNC) &_G3proj_BLRM_Tuning, 6},
+    {"_G3proj_BLRM_fit_mwg", (DL_FUNC) &_G3proj_BLRM_fit_mwg, 8},
     {"_G3proj_SSVS_Logistic", (DL_FUNC) &_G3proj_SSVS_Logistic, 9},
     {"_G3proj_SSVS_Tuning", (DL_FUNC) &_G3proj_SSVS_Tuning, 7},
     {NULL, NULL, 0}
