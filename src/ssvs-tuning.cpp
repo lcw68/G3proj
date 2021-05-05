@@ -104,6 +104,7 @@ double SSVS_Tune::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, a
 //' @param tau0 parameter for spike and slab prior of beta
 //' @param nMC number of MCMC samples
 //' @param b batch size
+//' @param seed set seed for random number generation
 //'
 //' @return A nested list of gamma samples, beta samples, beta acceptance rates for each batch, and the proposal standard deviations at the final batch.
 //'
@@ -128,8 +129,10 @@ double SSVS_Tune::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, a
 // [[Rcpp::export]]
 Rcpp::List SSVS_Tuning(arma::vec & Y0, arma::mat & X0,
                          double & c0, double & tau0,
-                         int nMC = 1000, int b=50)
+                         int nMC = 1000, int b=50, int seed=1)
 {
+  //set seed
+  srand(seed);
   // Declare ssvs class
   SSVS_Tune ssvs;
 
@@ -208,7 +211,7 @@ Rcpp::List SSVS_Tuning(arma::vec & Y0, arma::mat & X0,
     if(floor((i+1)/(double)b) == ceil((i+1)/(double)b))
     {
 
-      Rcpp::Rcout << (batch+1) << "-th batch \n";
+      //Rcpp::Rcout << (batch+1) << "-th batch \n";
 
       // compute acceptance rate
       acceptb = acceptb/b;

@@ -13,6 +13,7 @@
 #' @param nMC number of MCMC samples
 #' @param nBI number of burn-in samples
 #' @param thin number of samples to skip over in thinning
+#' @param seed set seed for random number generation
 #'
 #' @return a nested list of gamma samples, beta samples, and beta acceptance rates
 #'
@@ -31,11 +32,11 @@
 #' Y  = rbinom(N,1,pi)
 #'
 #' ## fit model;
-#' test1 <- SSVS_Logistic(Y0 = Y, X0 = X, propSD0 = 1, c0 = 10,
-#'                     tau0 = 0.4, nMC = 1000, nBI = 100)
+#' test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
+#'                     tau0 = 0.4, nMC = 1000, nBI = 100, seed=1)
 #' @export
-SSVS_Logistic <- function(Y0, X0, propSD0, c0, tau0, nMC = 1000L, nBI = 250L, thin = 5L) {
-    .Call(`_G3proj_SSVS_Logistic`, Y0, X0, propSD0, c0, tau0, nMC, nBI, thin)
+SSVS_Logistic <- function(Y0, X0, propSD0, c0, tau0, nMC = 1000L, nBI = 250L, thin = 5L, seed = 1L) {
+    .Call(`_G3proj_SSVS_Logistic`, Y0, X0, propSD0, c0, tau0, nMC, nBI, thin, seed)
 }
 
 #' MH Normal Proposal Tuning for SSVS under Logistic Regression Model
@@ -50,6 +51,7 @@ SSVS_Logistic <- function(Y0, X0, propSD0, c0, tau0, nMC = 1000L, nBI = 250L, th
 #' @param tau0 parameter for spike and slab prior of beta
 #' @param nMC number of MCMC samples
 #' @param b batch size
+#' @param seed set seed for random number generation
 #'
 #' @return A nested list of gamma samples, beta samples, beta acceptance rates for each batch, and the proposal standard deviations at the final batch.
 #'
@@ -68,10 +70,10 @@ SSVS_Logistic <- function(Y0, X0, propSD0, c0, tau0, nMC = 1000L, nBI = 250L, th
 #' Y  = rbinom(N,1,pi)
 #'
 #' ## fit model;
-#' test1 <- SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
+#' test1 <- G3proj::SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
 #'                     tau0 = 0.4, nMC = 1000, b = 50)
 #' @export
-SSVS_Tuning <- function(Y0, X0, c0, tau0, nMC = 1000L, b = 50L) {
-    .Call(`_G3proj_SSVS_Tuning`, Y0, X0, c0, tau0, nMC, b)
+SSVS_Tuning <- function(Y0, X0, c0, tau0, nMC = 1000L, b = 50L, seed = 1L) {
+    .Call(`_G3proj_SSVS_Tuning`, Y0, X0, c0, tau0, nMC, b, seed)
 }
 

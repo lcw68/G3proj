@@ -4,7 +4,7 @@
 \alias{SSVS_Tuning}
 \title{MH Normal Proposal Tuning for SSVS under Logistic Regression Model}
 \usage{
-SSVS_Tuning(Y0, X0, c0, tau0, nMC = 1000L, b = 50L)
+SSVS_Tuning(Y0, X0, c0, tau0, nMC = 1000L, b = 50L, seed = 1L)
 }
 \arguments{
 \item{Y0}{vector of responses}
@@ -18,6 +18,8 @@ SSVS_Tuning(Y0, X0, c0, tau0, nMC = 1000L, b = 50L)
 \item{nMC}{number of MCMC samples}
 
 \item{b}{batch size}
+
+\item{seed}{set seed for random number generation}
 }
 \value{
 A nested list of gamma samples, beta samples, beta acceptance rates for each batch, and the proposal standard deviations at the final batch.
@@ -43,6 +45,6 @@ pi = exp(eta) / (1 + exp(eta))
 Y  = rbinom(N,1,pi)
 
 ## fit model;
-test1 <- SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
+test1 <- G3proj::SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
                     tau0 = 0.4, nMC = 1000, b = 50)
 }

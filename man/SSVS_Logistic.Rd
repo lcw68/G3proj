@@ -4,7 +4,17 @@
 \alias{SSVS_Logistic}
 \title{Stochastic Search Variable Selection (SSVS) for Logistic Regression}
 \usage{
-SSVS_Logistic(Y0, X0, propSD0, c0, tau0, nMC = 1000L, nBI = 250L, thin = 5L)
+SSVS_Logistic(
+  Y0,
+  X0,
+  propSD0,
+  c0,
+  tau0,
+  nMC = 1000L,
+  nBI = 250L,
+  thin = 5L,
+  seed = 1L
+)
 }
 \arguments{
 \item{Y0}{vector of responses}
@@ -22,6 +32,8 @@ SSVS_Logistic(Y0, X0, propSD0, c0, tau0, nMC = 1000L, nBI = 250L, thin = 5L)
 \item{nBI}{number of burn-in samples}
 
 \item{thin}{number of samples to skip over in thinning}
+
+\item{seed}{set seed for random number generation}
 }
 \value{
 a nested list of gamma samples, beta samples, and beta acceptance rates
@@ -44,6 +56,6 @@ pi = exp(eta) / (1 + exp(eta))
 Y  = rbinom(N,1,pi)
 
 ## fit model;
-test1 <- SSVS_Logistic(Y0 = Y, X0 = X, propSD0 = 1, c0 = 10,
-                    tau0 = 0.4, nMC = 1000, nBI = 100)
+test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
+                    tau0 = 0.4, nMC = 1000, nBI = 100, seed=1)
 }

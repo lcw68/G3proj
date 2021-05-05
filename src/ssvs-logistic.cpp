@@ -109,6 +109,7 @@ double SSVS::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, arma::
 //' @param nMC number of MCMC samples
 //' @param nBI number of burn-in samples
 //' @param thin number of samples to skip over in thinning
+//' @param seed set seed for random number generation
 //'
 //' @return a nested list of gamma samples, beta samples, and beta acceptance rates
 //'
@@ -127,14 +128,16 @@ double SSVS::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, arma::
 //' Y  = rbinom(N,1,pi)
 //'
 //' ## fit model;
-//' test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0 = 1, c0 = 10,
-//'                     tau0 = 0.4, nMC = 1000, nBI = 100)
+//' test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
+//'                     tau0 = 0.4, nMC = 1000, nBI = 100, seed=1)
 //' @export
 // [[Rcpp::export]]
 Rcpp::List SSVS_Logistic(arma::vec & Y0, arma::mat & X0,
                 arma::vec & propSD0, double & c0, double & tau0,
-                int nMC = 1000, int nBI = 250, int thin=5)
+                int nMC = 1000, int nBI = 250, int thin=5, int seed=1)
 {
+  //set seed
+  srand(seed);
   // Declare ssvs class
   SSVS ssvs;
 
