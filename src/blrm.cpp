@@ -85,41 +85,7 @@ double    BLRM::RejectRatio   (arma::vec & betaProp, arma::vec & betaCurr, doubl
          - loglike(betaCurr)  - logPrior(betaCurr, PriorVar);
 }
 
-//' Bayesian Logistic Regression Model (BLRM) training
-//'
-//' Performs Bayesian Logistic Regression Model training by sampling beta
-//' from posterior distribution with user specified parameters and data
-//'
-//' @param Y0 vector of responses
-//' @param X0 covariate matrix
-//' @param PriorVar variance of prior distribution of beta
-//' @param propSD0 vector of standard deviations for normal proposal density
-//' @param nMC number of MCMC samples
-//' @param nBI number of burn-in samples
-//' @param thin number of samples to skip over in thinning
-//' @param seed set seed for random number generation
-//'
-//' @return a nested list of beta samples, and beta acceptance rates
-//'
-//' @examples
-//'
-//' ## simulate data;
-//'
-//' set.seed(1);
-//' N  = 8000;
-//' p  = 10;
-//'
-//' X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
-//' beta_true = c(rep(1,p/2),rep(0,p/2))
-//' eta = X %*% beta_true
-//' pi = exp(eta) / (1 + exp(eta))
-//' Y  = rbinom(N,1,pi)
-//' propSD = rep(1,p)
-//'
-//' ## fit model;
-//' test1 <- G3proj::BLRM_fit_mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = propSD,
-//'                       nMC = 1000, nBI = 100, thin = 5)
-//' @export
+
 // [[Rcpp::export]]
 Rcpp::List BLRM_fit_mwg(arma::vec & Y0, arma::mat & X0,
                        double PriorVar, arma::vec & propSD0,

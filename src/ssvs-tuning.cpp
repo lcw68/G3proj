@@ -92,40 +92,7 @@ double SSVS_Tune::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, a
   - logLikeBeta(betaCurr) - logPrior(betaCurr, gamma);
 }
 
-//' MH Normal Proposal Tuning for SSVS under Logistic Regression Model
-//'
-//' Tunes the normal proposal distribution standard deviation for Metropolis Hastings MCMC for the SSVS variable selection method in a Logistic Regression model.
-//'
-//' Runs nMc/b number of batches of size b. In each batch the algorithm calculates the Metropolis acceptance rate and adjusts the proposal standard deviation accordingly. As such, nMC must be a multiple of b.
-//'
-//' @param Y0 vector of responses
-//' @param X0 covariate matrix without intercept
-//' @param c0 parameter for spike and slab prior of beta
-//' @param tau0 parameter for spike and slab prior of beta
-//' @param nMC number of MCMC samples
-//' @param b batch size
-//' @param seed set seed for random number generation
-//'
-//' @return A nested list of gamma samples, beta samples, beta acceptance rates for each batch, and the proposal standard deviations at the final batch.
-//'
-//' @examples
-//'
-//' ## simulate data;
-//'
-//' set.seed(1);
-//' N  = 8000;
-//' p  = 10;
-//'
-//' X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
-//' beta_true = c(rep(1,p/2),rep(0,p/2))
-//' eta = X %*% beta_true
-//' pi = exp(eta) / (1 + exp(eta))
-//' Y  = rbinom(N,1,pi)
-//'
-//' ## fit model;
-//' test1 <- G3proj::SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
-//'                     tau0 = 0.4, nMC = 1000, b = 50)
-//' @export
+
 // [[Rcpp::export]]
 Rcpp::List SSVS_Tuning(arma::vec & Y0, arma::mat & X0,
                          double & c0, double & tau0,

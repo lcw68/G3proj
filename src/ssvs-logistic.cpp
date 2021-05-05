@@ -96,41 +96,6 @@ double SSVS::rejectionRatioBeta(arma::vec& betaProp, arma::vec& betaCurr, arma::
          - logLikeBeta(betaCurr) - logPrior(betaCurr, gamma);
 }
 
-
-//' Stochastic Search Variable Selection (SSVS) for Logistic Regression
-//'
-//' Performs SSVS for a logistic regression model with user specified parameters and data
-//'
-//' @param Y0 vector of responses
-//' @param X0 covariate matrix without intercept
-//' @param propSD0 vector of standard deviations for normal proposal density
-//' @param c0 parameter for spike and slab prior of beta
-//' @param tau0 parameter for spike and slab prior of beta
-//' @param nMC number of MCMC samples
-//' @param nBI number of burn-in samples
-//' @param thin number of samples to skip over in thinning
-//' @param seed set seed for random number generation
-//'
-//' @return a nested list of gamma samples, beta samples, and beta acceptance rates
-//'
-//' @examples
-//'
-//' ## simulate data;
-//'
-//' set.seed(1);
-//' N  = 8000;
-//' p  = 10;
-//'
-//' X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
-//' beta_true = c(rep(1,p/2),rep(0,p/2))
-//' eta = X %*% beta_true
-//' pi = exp(eta) / (1 + exp(eta))
-//' Y  = rbinom(N,1,pi)
-//'
-//' ## fit model;
-//' test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
-//'                     tau0 = 0.4, nMC = 1000, nBI = 100, seed=1)
-//' @export
 // [[Rcpp::export]]
 Rcpp::List SSVS_Logistic(arma::vec & Y0, arma::mat & X0,
                 arma::vec & propSD0, double & c0, double & tau0,
