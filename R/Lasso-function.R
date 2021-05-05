@@ -232,15 +232,15 @@ predict.glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
 #'
 #'@export
 optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len){
-  if(is.factor(y)){
+  if(is.factor(yz)){
 
-    if(length(levels(y)) >2)
+    if(length(levels(yz)) >2)
     {
       stop("Response have more than 2 level")
     }
-    y <- as.numeric(y)-1
+    yz <- as.numeric(yz)-1
   }
-  if(nrow(X)!= length(y))
+  if(nrow(Xz)!= length(yz))
   {
     stop("Length of y is not equal to number of X's row")
   }
