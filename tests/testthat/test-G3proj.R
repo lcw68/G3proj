@@ -47,7 +47,7 @@ test_that("BLRM fitting gives correct result",{
   test1 <- G3proj::BLRM_fit_mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = propSD,
                                 nMC = 500, nBI = 50, seed = 1)
 
-  expect_equal(test1$beta.act.rate, c(0.1276, 0.1188, 0.1044, 0.1068))
+  expect_equal(as.vector(test1$beta.act.rate), c(0.1276, 0.1188, 0.1044, 0.1068))
 })
 
 test_that("BLRM Tuning gives correct result",{
