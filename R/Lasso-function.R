@@ -126,6 +126,19 @@ glmlasso <- function(
 {
   #w = coef(glm.fit(X,y,family=binomial()))
   #w[is.na(w)]=1
+  if(is.factor(y)){
+
+    if(length(levels(y)) >2)
+    {
+      stop("Response have more than 2 level")
+    }
+    y <- as.numeric(y)-1
+  }
+  if(nrow(X)!= length(y))
+  {
+    stop("Length of y is not equal to number of X's row")
+  }
+
   w = rep(1,ncol(X))
   i = 1
   tol_curr = 1
@@ -219,6 +232,24 @@ predict.glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
 #'
 #'@export
 optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len){
+  if(is.factor(y)){
+
+    if(length(levels(y)) >2)
+    {
+      stop("Response have more than 2 level")
+    }
+    y <- as.numeric(y)-1
+  }
+  if(nrow(X)!= length(y))
+  {
+    stop("Length of y is not equal to number of X's row")
+  }
+
+  if(lambda.min > lambda.max)
+  {
+    stop("min could not be greater than max!")
+  }
+
   lambda = seq(lambda.min,lambda.max,length = len+1)[-1]
   BIC.cal <- function(i){
     ww <- glmlasso(Xz,yz,lambda =lambda[i])

@@ -103,3 +103,37 @@ test_that("BLRM Prediction gives correct result",{
   all.equal(table, table_true)
   expect_equal(table, table_true)
 })
+
+
+
+test_that("GLM lasso bad input",{
+  set.seed(1232)
+  Nz = 500
+  pz = 10
+  Xz = scale(matrix(rnorm(Nz*pz), ncol=pz))
+  bz = c(.5, -.5, .25, -.25, .125, -.125, rep(0, pz-6))
+  yz = rbinom(Nz+1,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
+  yz1 = factor(rbinom(Nz,2,exp(Xz %*% bz)/(1+exp(Xz %*% bz))))
+  lambda = .1
+  expect_error(glmlasso(Xz,yz,lambda,tol=1e-12))
+  expect_error(glmlasso(Xz,yz1,lambda,tol=1e-12))
+
+})
+
+
+
+test_that("optim.lambda bad input",{
+  set.seed(1232)
+  Nz = 500
+  pz = 10
+  Xz = scale(matrix(rnorm(Nz*pz), ncol=pz))
+  bz = c(.5, -.5, .25, -.25, .125, -.125, rep(0, pz-6))
+  yz = rbinom(Nz,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
+  yz1 = factor(rbinom(Nz,2,exp(Xz %*% bz)/(1+exp(Xz %*% bz))))
+
+  expect_error(optim.lambda(Xz,yz,lambda.min = 0.1,lambda.max = 0.05,len = 200))
+  expect_error(optim.lambda(Xz,yz1,lambda.min = 0.01,lambda.max = 0.05,len = 200))
+
+})
+
+
