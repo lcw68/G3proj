@@ -164,7 +164,7 @@ Rcpp::List BLRM_Tuning(arma::vec & Y0, arma::mat & X0,
     if(floor((i+1)/(double)b) == ceil((i+1)/(double)b))
     {
 
-      Rcpp::Rcout << (batch+1) << "-th batch \n";
+      //Rcpp::Rcout << (batch+1) << "-th batch \n";
 
       // compute acceptance rate
       acceptb = acceptb/b;
