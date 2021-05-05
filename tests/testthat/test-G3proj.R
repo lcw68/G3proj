@@ -151,4 +151,23 @@ test_that("optim.lambda bad input",{
 
 })
 
+test_that("the seleted lambda close to glmnetBIC", {
+  library(glmnet)
+  set.seed(8675309)
+  Nz = 500
+  pz = 10
+  Xz = scale(matrix(rnorm(Nz*pz), ncol=pz))
+  bz = c(.5, -.5, .25, -.25, .125, -.125, rep(0, pz-6))
+  yz = rbinom(Nz,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
+  
+  lambda1 <- optim.lambda(Xz,yz,lambda.min = 0,lambda.max = 0.1,len = 200)[[1]]
+  fit <- glmnet(Xz, yz,lambda = seq(0.1,0,length=200), family = "binomial") 
+  tLL <- fit$nulldev - deviance(fit)
+  k <- fit$df
+  n <- fit$nobs
+  BIC<-log(n)*k - tLL
+  min_BIC=which(BIC==min(BIC))
+  lambda_expected <- seq(0.1,0,length=200)[min_BIC]
+  expect_equal(lambda1,lambda_expected, tolerance = 0.002)
+})
 
