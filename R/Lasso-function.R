@@ -263,16 +263,12 @@ optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len){
   BIC = sapply(1:len, BIC.cal)
 
   # Choose the minimum value
-  min_BIC = which(BIC == min(BIC))
+   min_BIC = which(BIC == min(BIC))
   # opt.lambda
   l1 <- lambda[min_BIC]
-  # plot of BIC v.s. lambda
-  l2 <- plot(lambda, BIC,
-             xlim = c(lambda.min, lambda.max),
-             xlab = expression(lambda),
-             type = 'l', lwd = 2, lty = 1, col = 1)
-  abline(v=lambda[min_BIC], col = 2)
-  return(list(l1,l2))
+  l2 <- BIC
+  l3 <-lambda
+  return(list(l1,l2,l3))
 }
 
 
