@@ -194,7 +194,6 @@ glmlasso <- function(
 #'
 #'
 #' @export
-#'
 predict.glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
 {
   pred = exp(newdata %*% fit)/(1+exp(newdata %*% fit))
