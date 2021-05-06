@@ -44,7 +44,7 @@ from posterior distribution with user specified parameters and data
 ## simulate data;
 
 set.seed(1);
-N  = 8000;
+N  = 100;
 p  = 10;
 
 X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
@@ -55,6 +55,6 @@ Y  = rbinom(N,1,pi)
 propSD = rep(1,p)
 
 ## fit model;
-test1 <- G3proj::BLRM_fit_mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = propSD,
-                      nMC = 1000, nBI = 100, thin = 5)
+test1 <- G3proj::BLRM.fit.mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = propSD,
+                      nMC = 500, nBI = 100, thin = 5)
 }

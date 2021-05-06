@@ -46,7 +46,7 @@ Performs SSVS for a logistic regression model with user specified parameters and
 ## simulate data;
 
 set.seed(1);
-N  = 8000;
+N  = 100;
 p  = 10;
 
 X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
@@ -56,6 +56,6 @@ pi = exp(eta) / (1 + exp(eta))
 Y  = rbinom(N,1,pi)
 
 ## fit model;
-test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
+test1 <- G3proj::SSVS.Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
                                tau0 = 0.4, nMC = 1000, nBI = 100, thin=1, seed=1)
 }

@@ -37,7 +37,7 @@ accordingly. As such, nMC must be a multiple of b.
 ## simulate data;
 
 set.seed(1);
-N  = 8000;
+N  = 100;
 p  = 10;
 
 X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
@@ -47,6 +47,6 @@ pi = exp(eta) / (1 + exp(eta))
 Y  = rbinom(N,1,pi)
 
 ## Compute optimal proposal SD;
-test1 <- BLRM_Tuning(Y0 = Y, X0 = X, PriorVar = 1000,
-                     nMC = 10000, b = 50)
+test1 <- BLRM.Tuning(Y0 = Y, X0 = X, PriorVar = 1000,
+                     nMC = 100, b = 10)
 }

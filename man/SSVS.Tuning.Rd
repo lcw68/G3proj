@@ -35,7 +35,7 @@ Runs nMc/b number of batches of size b. In each batch the algorithm calculates t
 ## simulate data;
 
 set.seed(1);
-N  = 8000;
+N  = 100;
 p  = 10;
 
 X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
@@ -45,6 +45,6 @@ pi = exp(eta) / (1 + exp(eta))
 Y  = rbinom(N,1,pi)
 
 ## fit model;
-test1 <- G3proj::SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
+test1 <- G3proj::SSVS.Tuning(Y0 = Y, X0 = X, c0 = 10,
                              tau0 = 0.4, nMC = 1000, b = 50)
 }
