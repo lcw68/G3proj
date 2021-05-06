@@ -10,10 +10,10 @@ SSVS.Logistic(
   propSD0,
   c0,
   tau0,
-  nMC = 1000,
-  nBI = 250,
-  thin = 5,
-  seed = 1
+  nMC = 1000L,
+  nBI = 250L,
+  thin = 5L,
+  seed = 1L
 )
 }
 \arguments{
@@ -43,17 +43,18 @@ Performs SSVS for a logistic regression model with user specified parameters and
 }
 \examples{
 
-## simulate data;
+## simulate data
 
-set.seed(1);
-N  = 100;
-p  = 10;
+set.seed(1)
+N  = 100
+p  = 10
 
 X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
 beta_true = c(rep(1,p/2),rep(0,p/2))
 eta = X \%*\% beta_true
 pi = exp(eta) / (1 + exp(eta))
 Y  = rbinom(N,1,pi)
+propSD0 = rep(.5,p)
 
 ## fit model;
 test1 <- G3proj::SSVS.Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,

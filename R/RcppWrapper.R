@@ -1,5 +1,3 @@
-
-
 #' Bayesian Logistic Regression Model (BLRM) Tuning for Proposal Standard Deviation
 #'
 #' Performs hyper parameter tuning of proposal standard deviation
@@ -153,23 +151,24 @@ SSVS.Tuning <- function(Y0, X0, c0, tau0, nMC = 1000, b = 50, seed = 1) {
 #'
 #' @examples
 #'
-#' ## simulate data;
+#' ## simulate data
 #'
-#' set.seed(1);
-#' N  = 100;
-#' p  = 10;
+#' set.seed(1)
+#' N  = 100
+#' p  = 10
 #'
 #' X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
 #' beta_true = c(rep(1,p/2),rep(0,p/2))
 #' eta = X %*% beta_true
 #' pi = exp(eta) / (1 + exp(eta))
 #' Y  = rbinom(N,1,pi)
+#' propSD0 = rep(.5,p)
 #'
 #' ## fit model;
 #' test1 <- G3proj::SSVS.Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
 #'                                tau0 = 0.4, nMC = 1000, nBI = 100, thin=1, seed=1)
 #' @export
-SSVS.Logistic <- function(Y0, X0, propSD0, c0, tau0, nMC = 1000, nBI = 250, thin = 5, seed = 1){
+SSVS.Logistic <- function(Y0, X0, propSD0, c0, tau0, nMC = 1000L, nBI = 250L, thin = 5L, seed = 1L){
   if(length(Y0) != dim(X0)[1]){
     stop("Y and X have incompatible dimensions")
   }

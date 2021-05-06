@@ -33,5 +33,4 @@ lambda = .1
 fit1 <- glmlasso(Xz,yz,lambda,tol=1e-12)
 pred <- predict.glmlasso(fit1,newdata = Xz)
 
-
 }
