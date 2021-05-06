@@ -12,7 +12,7 @@ test_that("SSVS Logistic gives correct result",{
   ## fit model;
   test1 <- G3proj::SSVS.Logistic(Y0 = Y, X0 = X, propSD0 = rep(.5,p), c0 = 10,
                               tau0 = 0.4, nMC = 500, nBI = 50, seed=1)
-  expect_equal(colMeans(test1$gamma.samples),c(0.631, 0.536, 0.096, 0.101))
+  expect_equal(colMeans(test1$gamma.samples),c(0.630, 0.532, 0.082, 0.100))
 })
 
 test_that("SSVS Logistic gives error for incorrect dimensions",{
@@ -47,7 +47,7 @@ test_that("SSVS Tuning gives correct result",{
   test1 <- G3proj::SSVS.Tuning(Y0 = Y, X0 = X, c0 = 10,
                                  tau0 = 0.4, nMC = 500, b = 50, seed=1)
 
-  expect_equal(colMeans(test1$gamma.samples),c(0.598, 0.524, 0.100, 0.079))
+  expect_equal(colMeans(test1$gamma.samples),c(0.622, 0.542, 0.102, 0.070))
 })
 
 test_that("BLRM fitting gives correct result",{
@@ -65,7 +65,7 @@ test_that("BLRM fitting gives correct result",{
   test1 <- G3proj::BLRM.fit.mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = propSD,
                                 nMC = 500, nBI = 50, seed = 1)
 
-  expect_equal(as.vector(test1$beta.act.rate), c(0.1190, 0.1146, 0.0962, 0.1014))
+  expect_equal(as.vector(test1$beta.act.rate), c(0.1276, 0.1188, 0.1044, 0.1068))
 })
 
 test_that("BLRM fitting gives error for incorrect dimensions",{
@@ -101,7 +101,7 @@ test_that("BLRM Tuning gives correct result",{
   test1 <- G3proj::BLRM.Tuning(Y0 = Y, X0 = X, PriorVar = 1000,
                                 nMC = 500, b = 50, seed=1)
 
-  expect_equal(colMeans(test1$prop.sd.batch),c(0.37420, 0.36770, 0.35225, 0.35290))
+  expect_equal(colMeans(test1$prop.sd.batch),c(0.945, 0.945, 0.945, 0.945))
 })
 
 test_that("BLRM Prediction gives correct result",{
@@ -135,7 +135,7 @@ test_that("BLRM Prediction gives correct result",{
   table = caret::confusionMatrix(data = factor(prediction$data),
                                   reference = factor(ifelse(prediction$pred.prob > 0.5, 1, 0)),
                                   positive = "1")$table
-  table_true =as.table(matrix(c(332, 100, 92, 276), nrow = 2,
+  table_true =as.table(matrix(c(330, 102, 94, 274), nrow = 2,
                               dimnames = list(Prediction = c(0,1), Reference = c(0,1))))
   all.equal(table, table_true)
   expect_equal(table, table_true)
