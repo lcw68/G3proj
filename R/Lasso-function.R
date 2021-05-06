@@ -189,10 +189,10 @@ glmlasso <- function(
 #' yz = rbinom(Nz,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
 #' lambda = .1
 #' fit1 <- glmlasso(Xz,yz,lambda,tol=1e-12)
-#' pred <- predict.glmlasso(fit1,newdata = Xz)
+#' pred <- predict_glmlasso(fit1,newdata = Xz)
 #'
 #'@export
-predict.glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
+predict_glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
 {
   pred = exp(newdata %*% fit)/(1+exp(newdata %*% fit))
   if(type == "class")
