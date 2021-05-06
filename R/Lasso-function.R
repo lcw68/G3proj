@@ -188,7 +188,6 @@ glmlasso <- function(
 #' bz = c(.5, -.5, .25, -.25, .125, -.125, rep(0, pz-6))
 #' yz = rbinom(Nz,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
 #' lambda = .1
-
 #' fit1 <- glmlasso(Xz,yz,lambda,tol=1e-12)
 #' pred <- predict.glmlasso(fit1,newdata = Xz)
 #'
