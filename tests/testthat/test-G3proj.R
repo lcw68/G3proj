@@ -68,6 +68,25 @@ test_that("BLRM fitting gives correct result",{
   expect_equal(as.vector(test1$beta.act.rate), c(0.1190, 0.1146, 0.0962, 0.1014))
 })
 
+test_that("BLRM fitting gives error for incorrect dimensions",{
+  set.seed(1)
+  N  = 800
+  p  = 4
+  X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
+  beta_true = c(rep(1,p/2),rep(0,p/2))
+  eta = X %*% beta_true
+  pi = exp(eta) / (1 + exp(eta))
+  Y  = rbinom(N,1,pi)
+
+  ## fit model with extra dimension on Y
+  expect_error(G3proj::BLRM.fit.mwg(Y0 = c(Y,1), X0 = X, PriorVar = 1000, propSD0 = rep(.5,p),
+                                    nMC = 500, nBI = 50, seed=1))
+  ## fit model with wrong number of proposal standard deviations
+  expect_error(G3proj::BLRM.fit.mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = c(1),
+                                    nMC = 500, nBI = 50, seed=1))
+})
+
+
 test_that("BLRM Tuning gives correct result",{
   set.seed(1)
   N  = 800
@@ -177,9 +196,9 @@ test_that("the seleted lambda close to glmnetBIC", {
   Xz = scale(matrix(rnorm(Nz*pz), ncol=pz))
   bz = c(.5, -.5, .25, -.25, .125, -.125, rep(0, pz-6))
   yz = rbinom(Nz,1,exp(Xz %*% bz)/(1+exp(Xz %*% bz)))
-  
+
   lambda1 <- optim.lambda(Xz,yz,lambda.min = 0,lambda.max = 0.1,len = 200)[[1]]
-  fit <- glmnet(Xz, yz,lambda = seq(0.1,0,length=200), family = "binomial") 
+  fit <- glmnet(Xz, yz,lambda = seq(0.1,0,length=200), family = "binomial")
   tLL <- fit$nulldev - deviance(fit)
   k <- fit$df
   n <- fit$nobs
