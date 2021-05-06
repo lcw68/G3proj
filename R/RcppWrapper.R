@@ -24,7 +24,7 @@
 #' ## simulate data;
 #'
 #' set.seed(1);
-#' N  = 8000;
+#' N  = 100;
 #' p  = 10;
 #'
 #' X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
@@ -34,12 +34,16 @@
 #' Y  = rbinom(N,1,pi)
 #'
 #' ## Compute optimal proposal SD;
-#' test1 <- BLRM_Tuning(Y0 = Y, X0 = X, PriorVar = 1000,
-#'                      nMC = 10000, b = 50)
+#' test1 <- BLRM.Tuning(Y0 = Y, X0 = X, PriorVar = 1000,
+#'                      nMC = 100, b = 10)
 #' @useDynLib G3proj
 #' @export
 BLRM.Tuning <- function(Y0, X0, PriorVar, nMC = 10000, b = 50, seed = 1) {
-  BLRM_Tuning(Y0, X0, PriorVar, nMC = 10000L, b = 50L, seed = 1L)
+  if(length(Y0) != dim(X0)[1]){
+    stop("Y and X have incompatible dimensions")
+  }
+
+  BLRM_Tuning(Y0, X0, PriorVar, nMC, b, seed)
 }
 
 
@@ -64,7 +68,7 @@ BLRM.Tuning <- function(Y0, X0, PriorVar, nMC = 10000, b = 50, seed = 1) {
 #' ## simulate data;
 #'
 #' set.seed(1);
-#' N  = 8000;
+#' N  = 100;
 #' p  = 10;
 #'
 #' X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
@@ -75,11 +79,18 @@ BLRM.Tuning <- function(Y0, X0, PriorVar, nMC = 10000, b = 50, seed = 1) {
 #' propSD = rep(1,p)
 #'
 #' ## fit model;
-#' test1 <- G3proj::BLRM_fit_mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = propSD,
-#'                       nMC = 1000, nBI = 100, thin = 5)
+#' test1 <- G3proj::BLRM.fit.mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = propSD,
+#'                       nMC = 500, nBI = 100, thin = 5)
 #' @export
 BLRM.fit.mwg <- function(Y0, X0, PriorVar, propSD0, nMC = 1000, nBI = 250, thin = 5, seed = 1) {
-  BLRM_fit_mwg(Y0, X0, PriorVar, propSD0, nMC = 1000L, nBI = 250L, thin = 5L, seed = 1L)
+  if(length(Y0) != dim(X0)[1]){
+    stop("Y and X have incompatible dimensions")
+  }
+  if(dim(X0)[2] != length(propSD0)){
+    stop("Must specify proposal standard deviation for each column of X")
+  }
+
+  BLRM_fit_mwg(Y0, X0, PriorVar, propSD0, nMC, nBI, thin, seed)
 }
 
 #' MH Random Walk Proposal Tuning for SSVS under Logistic Regression Model
@@ -103,7 +114,7 @@ BLRM.fit.mwg <- function(Y0, X0, PriorVar, propSD0, nMC = 1000, nBI = 250, thin 
 #' ## simulate data;
 #'
 #' set.seed(1);
-#' N  = 8000;
+#' N  = 100;
 #' p  = 10;
 #'
 #' X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
@@ -113,11 +124,15 @@ BLRM.fit.mwg <- function(Y0, X0, PriorVar, propSD0, nMC = 1000, nBI = 250, thin 
 #' Y  = rbinom(N,1,pi)
 #'
 #' ## fit model;
-#' test1 <- G3proj::SSVS_Tuning(Y0 = Y, X0 = X, c0 = 10,
+#' test1 <- G3proj::SSVS.Tuning(Y0 = Y, X0 = X, c0 = 10,
 #'                              tau0 = 0.4, nMC = 1000, b = 50)
 #' @export
 SSVS.Tuning <- function(Y0, X0, c0, tau0, nMC = 1000, b = 50, seed = 1) {
-  SSVS_Tuning(Y0, X0, c0, tau0, nMC = 1000L, b = 50L, seed = 1L)
+  if(length(Y0) != dim(X0)[1]){
+    stop("Y and X have incompatible dimensions")
+  }
+
+  SSVS_Tuning(Y0, X0, c0, tau0, nMC, b, seed)
 }
 
 #' Stochastic Search Variable Selection (SSVS) for Logistic Regression
@@ -141,7 +156,7 @@ SSVS.Tuning <- function(Y0, X0, c0, tau0, nMC = 1000, b = 50, seed = 1) {
 #' ## simulate data;
 #'
 #' set.seed(1);
-#' N  = 8000;
+#' N  = 100;
 #' p  = 10;
 #'
 #' X  = matrix(data = rnorm(N*p), nrow=N, ncol=p)
@@ -151,7 +166,7 @@ SSVS.Tuning <- function(Y0, X0, c0, tau0, nMC = 1000, b = 50, seed = 1) {
 #' Y  = rbinom(N,1,pi)
 #'
 #' ## fit model;
-#' test1 <- G3proj::SSVS_Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
+#' test1 <- G3proj::SSVS.Logistic(Y0 = Y, X0 = X, propSD0, c0 = 10,
 #'                                tau0 = 0.4, nMC = 1000, nBI = 100, thin=1, seed=1)
 #' @export
 SSVS.Logistic <- function(Y0, X0, propSD0, c0, tau0, nMC = 1000, nBI = 250, thin = 5, seed = 1){
@@ -162,5 +177,5 @@ SSVS.Logistic <- function(Y0, X0, propSD0, c0, tau0, nMC = 1000, nBI = 250, thin
     stop("Must specify proposal standard deviation for each column of X")
   }
 
-  SSVS_Logistic(Y0, X0, propSD0, c0, tau0, nMC = 1000L, nBI = 250L, thin = 5L, seed = 1L)
+  SSVS_Logistic(Y0, X0, propSD0, c0, tau0, nMC, nBI, thin, seed)
 }
