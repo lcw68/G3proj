@@ -231,7 +231,7 @@ predict.glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
 #'
 #'
 #'@export
-optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len){
+optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len,plot=FALSE){
   if(is.factor(yz)){
 
     if(length(levels(yz)) >2)
@@ -264,11 +264,18 @@ optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len){
 
   # Choose the minimum value
    min_BIC = which(BIC == min(BIC))
-  # opt.lambda
-  l1 <- lambda[min_BIC]
-  l2 <- BIC
-  l3 <-lambda
-  return(list(l1,l2,l3))
+   # opt.lambda
+ l1 <- lambda[min_BIC]
+  # plot of BIC v.s. lambda
+  if (plot==TRUE){
+    l2 <- plot(lambda, BIC,
+         xlim = c(lambda.min, lambda.max),
+         xlab = expression(lambda),
+         type = 'l', lwd = 2, lty = 1, col = 1)
+    abline(v=lambda[min_BIC], col = 2)
+    return(list(l1,l2))
+  }
+  return(list(l1))
 }
 
 
