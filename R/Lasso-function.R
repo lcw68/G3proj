@@ -218,6 +218,7 @@ predict.glmlasso <- function(fit, newdata, type="response", threshold = 0.5)
 #'@param lambda.min the smallest lambda
 #'@param lambda.max the largest lambda
 #'@param len the number of lambdas for fitting
+#'@param plot logic variable, indicating if the lambda versus BIC plot should be returned
 #'
 #'@return a plot of BIC vs lambda and the optimal lambda with the smallest BIC
 #'
@@ -275,7 +276,9 @@ optim.lambda <- function(Xz,yz,lambda.min,lambda.max,len,plot=FALSE){
     abline(v=lambda[min_BIC], col = 2)
     return(list(l1,l2))
   }
-  return(list(l1))
+ else{
+   return(list(l1))
+ }
 }
 
 

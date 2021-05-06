@@ -4,7 +4,7 @@
 \alias{optim.lambda}
 \title{select optimal tuning parameter lambda for lasso based on BIC criterion.}
 \usage{
-optim.lambda(Xz, yz, lambda.min, lambda.max, len)
+optim.lambda(Xz, yz, lambda.min, lambda.max, len, plot = FALSE)
 }
 \arguments{
 \item{Xz}{the design matrix for glmlasso}
@@ -16,6 +16,8 @@ optim.lambda(Xz, yz, lambda.min, lambda.max, len)
 \item{lambda.max}{the largest lambda}
 
 \item{len}{the number of lambdas for fitting}
+
+\item{plot}{logic variable, indicating if the lambda versus BIC plot should be returned}
 }
 \value{
 a plot of BIC vs lambda and the optimal lambda with the smallest BIC
