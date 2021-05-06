@@ -41,7 +41,7 @@ MCsamples = matrix(data = rep(beta_true, M), nrow = M, ncol = p, byrow = T) + ma
 
 ## predict based on MCMC beta samples
 
-prediction = predict_BLRM(Y, X, blrm$beta.samples)
+prediction = predict_BLRM(Y.test, X.test, MCsamples)
 
 ## Classification Metrics with cutoff = 0.5
 caret::confusionMatrix(data = factor(prediction$data), reference = factor(ifelse(prediction$pred.prob > 0.5, 1, 0)), positive = "1")
