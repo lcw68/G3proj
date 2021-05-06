@@ -36,7 +36,7 @@
 #'                      nMC = 100, b = 10)
 #' @useDynLib G3proj
 #' @export
-BLRM.Tuning <- function(Y0, X0, PriorVar, nMC = 10000, b = 50, seed = 1) {
+BLRM.Tuning <- function(Y0, X0, PriorVar, nMC = 10000L, b = 50L, seed = 1L) {
   if(length(Y0) != dim(X0)[1]){
     stop("Y and X have incompatible dimensions")
   }
@@ -80,7 +80,8 @@ BLRM.Tuning <- function(Y0, X0, PriorVar, nMC = 10000, b = 50, seed = 1) {
 #' test1 <- G3proj::BLRM.fit.mwg(Y0 = Y, X0 = X, PriorVar = 1000, propSD0 = propSD,
 #'                       nMC = 500, nBI = 100, thin = 5)
 #' @export
-BLRM.fit.mwg <- function(Y0, X0, PriorVar, propSD0, nMC = 1000, nBI = 250, thin = 5, seed = 1) {
+BLRM.fit.mwg <- function(Y0, X0, PriorVar, propSD0,
+                         nMC = 1000L, nBI = 250L, thin = 5L, seed = 1L) {
   if(length(Y0) != dim(X0)[1]){
     stop("Y and X have incompatible dimensions")
   }
@@ -125,7 +126,7 @@ BLRM.fit.mwg <- function(Y0, X0, PriorVar, propSD0, nMC = 1000, nBI = 250, thin 
 #' test1 <- G3proj::SSVS.Tuning(Y0 = Y, X0 = X, c0 = 10,
 #'                              tau0 = 0.4, nMC = 1000, b = 50)
 #' @export
-SSVS.Tuning <- function(Y0, X0, c0, tau0, nMC = 1000, b = 50, seed = 1) {
+SSVS.Tuning <- function(Y0, X0, c0, tau0, nMC = 1000L, b = 50L, seed = 1L) {
   if(length(Y0) != dim(X0)[1]){
     stop("Y and X have incompatible dimensions")
   }
